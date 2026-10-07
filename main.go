@@ -20,6 +20,6 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 	}))
 
-	fmt.Println("Started fake RustDesk API Server and it already listening TCP:21114")
+	fmt.Println("Started fake RustDesk API Server at TCP:21114")
 	
 }
