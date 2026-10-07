@@ -74,7 +74,7 @@ jobs:
             sdk_arch: "rockchip-armv8"
           - rdks_tag: "arm64v8"
             rsoparch: "arm64"
-            patch_arch: "aarch64_generic"
+            patch_arch: "aarch64_cortex-a53"
             sdk_arch: "mediatek-filogic"
 
     steps:
