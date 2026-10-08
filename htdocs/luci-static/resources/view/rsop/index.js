@@ -22,16 +22,11 @@ var isRunning = false;
 var pending = false;
 
 async function getServiceStatus() {
-  const res = await L.resolveDefault(callServiceList("rsop"), {});
-  try {
-    return (
-      res["rsop"]["instances"]["rsop"]["running"] &&
-      res["rsop"]["instances"]["hbbs"]["running"] &&
-      res["rsop"]["instances"]["hbbr"]["running"]
-    );
-  } catch (e) {
-    return false;
-  }
+  const res = await callServiceList("rsop");
+  const instances = (res.rsop && res.rsop.instances) || {};
+  return ["rsop", "hbbs", "hbbr"].map(function (name) {
+    return !!(instances[name] && instances[name].running);
+  });
 }
 
 async function getBinaryStatus() {
@@ -79,15 +74,15 @@ function renderStatus(binaryFound, isRunning) {
 async function updateStatus() {
   const res = await Promise.all([
     getBinaryStatus(),
-    getServiceStatus(),
+    L.resolveDefault(getServiceStatus(), [false, false, false]),
     getServerKey(),
   ]);
   var status = document.getElementById("service_status");
-  if (status) status.innerHTML = renderStatus(res[0], res[1]);
+  if (status) status.innerHTML = renderStatus(res[0], res[1].every(Boolean));
   var key = document.getElementById("server_key");
   if (key) key.value = res[2] || "";
 
-  isRunning = res[1];
+  isRunning = res[1].some(Boolean);
   var cb = document.getElementById("toggle_checkbox");
   if (cb && !pending) cb.checked = isRunning;
 }
@@ -168,53 +163,66 @@ return view.extend({
     pending = true;
   },
 
-  applyCheckboxState: function () {
+  applyCheckboxState: async function () {
     var cb = document.getElementById("toggle_checkbox");
-    if (!cb) return Promise.resolve();
+    if (!cb) return;
 
     var start = cb.checked;
 
-    return callRcInit("rsop", start ? "start" : "stop")
-      .then(function (ret) {
-        var ok = !ret;
-        pending = false;
-        if (!ok) cb.checked = !start;
+    try {
+      var ret = await callRcInit("rsop", start ? "start" : "stop");
+      if (ret) throw new Error(_("Command failed"));
 
-        ui.addNotification(
-          null,
-          E(
-            "p",
-            {},
-            ok
-              ? start
-                ? _("Service started.")
-                : _("Service stopped.")
-              : start
-                ? _("Failed to start the service.")
-                : _("Failed to stop the service."),
-          ),
-        );
+      var ok = false;
+      for (var i = 0; i <= 5; i++) {
+        var states = await getServiceStatus();
+        if (states.every(function (running) {
+          return running === start;
+        })) {
+          ok = true;
+          break;
+        }
+        if (i < 5) {
+          await new Promise(function (resolve) {
+            setTimeout(resolve, 1000);
+          });
+        }
+      }
 
-        updateStatus();
-      })
-      .catch(function (e) {
-        pending = false;
-        cb.checked = !start;
-        ui.addNotification(
-          null,
-          E(
-            "p",
-            {},
-            (start
+      pending = false;
+      if (!ok) cb.checked = !start;
+      ui.addNotification(
+        null,
+        E(
+          "p",
+          {},
+          ok
+            ? start
+              ? _("Service started.")
+              : _("Service stopped.")
+            : start
               ? _("Failed to start the service.")
-              : _("Failed to stop the service.")) +
-              ": " +
-              (e.message || ""),
-          ),
-        );
+              : _("Failed to stop the service."),
+        ),
+      );
+    } catch (e) {
+      pending = false;
+      cb.checked = !start;
+      ui.addNotification(
+        null,
+        E(
+          "p",
+          {},
+          (start
+            ? _("Failed to start the service.")
+            : _("Failed to stop the service.")) +
+            ": " +
+            (e.message || ""),
+        ),
+      );
+    }
 
-        updateStatus();
-      });
+    return updateStatus();
   },
 
   handleCopyKey: function (ev) {
