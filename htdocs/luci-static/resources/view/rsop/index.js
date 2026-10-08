@@ -176,9 +176,11 @@ return view.extend({
       var ok = false;
       for (var i = 0; i <= 5; i++) {
         var states = await getServiceStatus();
-        if (states.every(function (running) {
-          return running === start;
-        })) {
+        if (
+          states.every(function (running) {
+            return running === start;
+          })
+        ) {
           ok = true;
           break;
         }
