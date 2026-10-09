@@ -17,22 +17,14 @@ Rustdesk Server for OpenWrt with LuCI Support.
 
 [Install, Compile and init-SDK Generic Guide](https://867678.xyz/docs/openwrt)
 
-It is assumed that you are already in the SDK root directory.
-
-All binaries are now compiled from source by the build system, no
-prebuilt downloads or per-arch tweaks are needed:
-
-- `rsop` (the fake API server) is built from `main.go`/`go.mod` by the
-  nested `rsop/` package via `golang-package.mk`.
-- `hbbs`/`hbbr` are provided by the `rustdesk-server` package from the
-  packages feed (make sure `./scripts/feeds install rustdesk-server`
-  has been run). `rustdesk-server` upstream supports
-  aarch64/arm/x86_64 targets only.
-
-Then just build:
+And some extra commands:
 
 ```bash
-make package/luci-app-rsop/compile V=s
+# Make sure you at root directory of this project
+rm root/usr/bin/DONOTREMOVE
+wget -O rsop https://github.com/morouter/luci-app-rsop/releases/download/Always-200OK-Server/rsop-YourCPUArch
+cd ../../../
+# See generic guide
 ```
 
 ## ⚖️ License
