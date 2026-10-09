@@ -3,8 +3,10 @@ name: I go to Comicon, guns, and thrash metal shows
 on:
   push:
   workflow_dispatch:
+
 permissions:
   contents: write
+
 jobs:
   a2s:
     name: Build Always OK Server for ${{ matrix.dickname }}
@@ -89,27 +91,29 @@ jobs:
             sdk_arch: "mediatek-filogic"
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@main
-      
-      - name: Get version
-        id: get_version
-        shell: bash
-        run: |
-          VERSION=$(grep -E "^PKG_VERSION[[:space:]]*:=" Makefile | sed -E 's/.*:=[[:space:]]*//' | tr -d '[:space:]')
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-
       - name: Prepare SDK
         id: sdk
         uses: moaeiou/moaeiou/actions/prepare-sdk@main
         with:
           sdk_arch: ${{ matrix.sdk_arch }}
 
-      - name: Prepare before compile
+      - name: Create directory
         shell: bash
         run: |
-          cd ..
-          mv ./luci-app-rsop ${{ steps.sdk.outputs.sdk_dir }}/package/
+          mkdir -p ${{ steps.sdk.outputs.sdk_dir }}/package/luci-app-rsop/
+
+      - name: Checkout
+        uses: actions/checkout@main
+        with:
+          path: ${{ steps.sdk.outputs.sdk_dir }}/package/luci-app-rsop/
+
+      - name: Get version
+        id: get_version
+        shell: bash
+        run: |
+          cd ${{ steps.sdk.outputs.sdk_dir }}/package/luci-app-rsop/
+          VERSION=$(grep -E "^PKG_VERSION[[:space:]]*:=" Makefile | sed -E 's/.*:=[[:space:]]*//' | tr -d '[:space:]')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Build!
         shell: bash
