@@ -22,6 +22,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@main
 
+      - name: Fuck GitHub cache
+        shell: bash
+        run: |
+          mv ./go.mod ./go.mod.backup
+
       - name: Set up Go
         uses: actions/setup-go@main
         with:
@@ -30,6 +35,7 @@ jobs:
       - name: Build!
         shell: bash
         run: |
+          mv ./go.mod.backup ./go.mod
           ${{ matrix.tag }} go build -o rsop-${{ matrix.dickname }}
 
       - name: Release
@@ -38,12 +44,17 @@ jobs:
           tag_name: Always-200OK-Server
           files: rsop-${{ matrix.dickname }}
           body: |
-            # An always 200-OK Server
-            ## ? Why do this
-            - If you not bought `Rustdesk-Server-Pro`, the `21114 port` will be **TimeOut Error**.
-            - So this is a program to solve this problem, It just a Always OK WebServer by Golang and listening 21114 port.
-            ## ⚖️ License
-            GNU AGPL-v3-or-later.
+            # 一个永远返回200OK的Web服务器
+
+            如果你也经常使用Rustdesk，你应该会遇到客户端频繁向服务端的21114端口发送http请求以获取状态。
+            这本来很正常对吧，但是如果你使用代理，那么你将看到一大堆错误请求出现在代理日志中！这十分影响排查代理问题！
+            于是，鉴于普通用户不需要Rustdesk的网页端功能，所以我用Go语言写了一个简短的程序。
+            作用是监听21114端口，对过来的所有数据都表示一个200OK然后关闭连接。
+            现在，代理工具中再也不会显示错误了。
+
+            ## ⚖️ 条款与许可
+            该软件以GNU AGPL-v3或更新版本授权。
+            作者不对使用该软件产生的任何后果负责。
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -80,40 +91,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@main
-        with:
-          path: ${{ env.project_name }}
+      
+      - name: Get version
+        id: get_version
+        shell: bash
+        run: |
+          VERSION=$(grep -E "^PKG_VERSION[[:space:]]*:=" Makefile | sed -E 's/.*:=[[:space:]]*//' | tr -d '[:space:]')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Prepare SDK
         id: sdk
         uses: moaeiou/moaeiou/actions/prepare-sdk@main
         with:
           sdk_arch: ${{ matrix.sdk_arch }}
-      
-      - name: Get version
-        id: get_version
-        shell: bash
-        run: |
-          mv ${{ env.project_name }} ${{ steps.sdk.outputs.sdk_dir }}/package/
-          cd ${{ steps.sdk.outputs.sdk_dir }}/package/${{ env.project_name }}
-          VERSION=$(grep -E "^PKG_VERSION[[:space:]]*:=" Makefile | sed -E 's/.*:=[[:space:]]*//' | tr -d '[:space:]')
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Prepare before compile
         shell: bash
         run: |
-          cd ${{ steps.sdk.outputs.sdk_dir }}/package/${{ env.project_name }}
-          if [ "${{ matrix.patch_arch }}" != "x86_64" ]; then
-            sed -i 's/x86_64/${{ matrix.patch_arch }}/g' ./Makefile
-          fi
-          cd root/etc/rustdesk/
-          wget -O rsop https://github.com/morouter/luci-app-rsop/releases/download/Always-200OK-Server/rsop-${{ matrix.rsoparch }}
-          wget -O rustdesk-server.zip https://github.com/rustdesk/rustdesk-server/releases/latest/download/rustdesk-server-linux-${{ matrix.rdks_tag }}.zip
-          unzip ./rustdesk-server.zip
-          mv ./${{ matrix.rdks_tag }}/hbbr ./
-          mv ./${{ matrix.rdks_tag }}/hbbs ./
-          mv ./${{ matrix.rdks_tag }}/rustdesk-utils ./
-          rm -rf ./${{ matrix.rdks_tag }} ./rustdesk-server.zip DONOTREMOVE ../../go.mod ../../main.go
-          chmod +x ./hbbr ./hbbs ./rustdesk-utils ./rsop
+          cd ..
+          mv ./luci-app-rsop ${{ steps.sdk.outputs.sdk_dir }}/package/
 
       - name: Build!
         shell: bash

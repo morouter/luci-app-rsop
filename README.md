@@ -41,4 +41,4 @@ This project has been licensed under the [GNU Affero General Public License Vers
 
 This project has included the [RustDesk-Server](https://github.com/rustdesk/rustdesk-server).
 
-And [The log page](https://github.com/Internet1235/luci-app-openlist/blob/main/luci-app-openlist/htdocs/luci-static/resources/view/openlist/log.js) This project was licensed under the MIT, So in this project I change it to `AGPL-v3`.
+And [the log page](https://github.com/Internet1235/luci-app-openlist/blob/main/luci-app-openlist/htdocs/luci-static/resources/view/openlist/log.js) licensed under the MIT, So in this project I change it to `AGPL-v3`.
