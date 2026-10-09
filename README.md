@@ -19,29 +19,20 @@ Rustdesk Server for OpenWrt with LuCI Support.
 
 It is assumed that you are already in the SDK root directory.
 
-If you router CPU Arch is not amd64, change `LUCI_PKGARCH:=` to your arch in `Makefile`.
+All binaries are now compiled from source by the build system, no
+prebuilt downloads or per-arch tweaks are needed:
 
-Additional operations are required on the source code:
+- `rsop` (the fake API server) is built from `main.go`/`go.mod` by the
+  nested `rsop/` package via `golang-package.mk`.
+- `hbbs`/`hbbr` are provided by the `rustdesk-server` package from the
+  packages feed (make sure `./scripts/feeds install rustdesk-server`
+  has been run). `rustdesk-server` upstream supports
+  aarch64/arm/x86_64 targets only.
 
-```bash
-cd ⚠️sdk-root/package/rsop/root/etc/rustdesk
-rm DONOTREMOVE
-wget -O rustdesk-server.zip https://github.com/rustdesk/rustdesk-server/releases/latest/download/rustdesk-server-linux-⚠️ARCH.zip
-wget -O rsop https://github.com/morouter/luci-app-rsop/releases/download/Always-200OK-Server/rsop-⚠️ARCH
-unzip ./rustdesk-server.zip
-mv ./⚠️ARCH/hbbr ./
-mv ./⚠️ARCH/hbbs ./
-mv ./⚠️ARCH/rustdesk-utils ./
-rm -rf ./⚠️ARCH ./rustdesk-server.zip DONOTREMOVE ../../go.mod ../../main.go
-chmod +x ./hbbr ./hbbs ./rustdesk-utils ./rsop
-```
-
-Build the Fake API Server
+Then just build:
 
 ```bash
-git clone git@github.com:morouter/luci-app-rsop.git
-cd rsop
-GOOS=linux CGO_ENABLED=0 GOARCH=your/router/cpu/arch go build
+make package/luci-app-rsop/compile V=s
 ```
 
 ## ⚖️ License

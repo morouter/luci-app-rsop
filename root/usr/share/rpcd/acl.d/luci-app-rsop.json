@@ -4,7 +4,10 @@
     "read": {
       "file": {
         "/etc/rustdesk/*": ["stat"],
-        "/etc/rustdesk/id_ed25519.pub": ["read"]
+        "/etc/rustdesk/id_ed25519.pub": ["read"],
+        "/usr/bin/rsop": ["stat"],
+        "/usr/bin/hbbs": ["stat"],
+        "/usr/bin/hbbr": ["stat"]
       },
       "ubus": {
         "file": ["read", "stat"],

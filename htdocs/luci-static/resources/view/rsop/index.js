@@ -31,9 +31,9 @@ async function getServiceStatus() {
 
 async function getBinaryStatus() {
   const res = await Promise.all([
-    L.resolveDefault(fs.stat("/etc/rustdesk/rsop"), null),
-    L.resolveDefault(fs.stat("/etc/rustdesk/hbbs"), null),
-    L.resolveDefault(fs.stat("/etc/rustdesk/hbbr"), null),
+    L.resolveDefault(fs.stat("/usr/bin/rsop"), null),
+    L.resolveDefault(fs.stat("/usr/bin/hbbs"), null),
+    L.resolveDefault(fs.stat("/usr/bin/hbbr"), null),
   ]);
   return res[0] != null && res[1] != null && res[2] != null;
 }
