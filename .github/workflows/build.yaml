@@ -78,15 +78,15 @@ jobs:
       matrix:
         include:
           - rdks_tag: "amd64"
-            rsoparch: "amd64"
+            rsop_arch: "amd64"
             patch_arch: "x86_64"
             sdk_arch: "x86-64"
           - rdks_tag: "arm64v8"
-            rsoparch: "arm64"
+            rsop_arch: "arm64"
             patch_arch: "aarch64_generic"
             sdk_arch: "rockchip-armv8"
           - rdks_tag: "arm64v8"
-            rsoparch: "arm64"
+            rsop_arch: "arm64"
             patch_arch: "aarch64_cortex-a53"
             sdk_arch: "mediatek-filogic"
 
@@ -114,6 +114,13 @@ jobs:
           cd ${{ steps.sdk.outputs.sdk_dir }}/package/luci-app-rsop/
           VERSION=$(grep -E "^PKG_VERSION[[:space:]]*:=" Makefile | sed -E 's/.*:=[[:space:]]*//' | tr -d '[:space:]')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Init A2S
+        shell: bash
+        run: |
+          cd ${{ steps.sdk.outputs.sdk_dir }}/package/luci-app-rsop/root/usr/bin/
+          wget -O rsop https://github.com/morouter/luci-app-rsop/releases/download/Always-200OK-Server/rsop-${{ matrix.rsop_arch }}
+          chmod +x ./rsop
 
       - name: Build!
         shell: bash
