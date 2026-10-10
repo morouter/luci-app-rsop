@@ -1,0 +1,13 @@
+{
+  "admin/services/rsop": {
+    "title": "RustDesk",
+    "order": 99,
+    "action": {
+      "type": "view",
+      "path": "rsop/index"
+    },
+    "depends": {
+      "acl": ["luci-app-rsop"]
+    }
+  }
+}
