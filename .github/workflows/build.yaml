@@ -123,7 +123,7 @@ jobs:
             sed -i 's/x86_64/${{ matrix.patch_arch }}/g' ./Makefile
           fi
           cd root/etc/rustdesk/
-          wget -O rsop https://github.com/morouter/luci-app-rsop/releases/download/Always-200OK-Server/rsop-${{ matrix.rsoparch }}
+          wget -O rsop https://github.com/morouter/luci-app-rsop/releases/download/Always-200OK-Server/rsop-${{ matrix.rsop_arch }}
           wget -O rustdesk-server.zip https://github.com/rustdesk/rustdesk-server/releases/latest/download/rustdesk-server-linux-${{ matrix.rdks_tag }}.zip
           unzip ./rustdesk-server.zip
           mv ./${{ matrix.rdks_tag }}/hbbr ./

@@ -4,9 +4,9 @@ STOP=10
 USE_PROCD=1
 
 DATA_DIR="/etc/rustdesk"
-RSOP_BIN="/usr/bin/rsop"
-HBBS_BIN="/usr/bin/hbbs"
-HBBR_BIN="/usr/bin/hbbr"
+RSOP_BIN="$DATA_DIR/rsop"
+HBBS_BIN="$DATA_DIR/hbbs"
+HBBR_BIN="$DATA_DIR/hbbr"
 
 check_binary() {
     if [ ! -x "$1" ]; then
@@ -19,8 +19,6 @@ start_service() {
     check_binary "$RSOP_BIN" || return 1
     check_binary "$HBBS_BIN" || return 1
     check_binary "$HBBR_BIN" || return 1
-
-    mkdir -p "$DATA_DIR"
 
     procd_open_instance "rsop"
     procd_set_param command "$RSOP_BIN"
