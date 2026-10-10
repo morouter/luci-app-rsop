@@ -100,25 +100,25 @@ jobs:
       - name: Create directory
         shell: bash
         run: |
-          mkdir -p ${{ steps.sdk.outputs.sdk_dir }}/package/luci-app-rsop/
+          mkdir -p ${{ steps.sdk.outputs.sdk_dir }}/package/${{ env.project_name }}/
 
       - name: Checkout
         uses: actions/checkout@main
         with:
-          path: ${{ steps.sdk.outputs.sdk_dir }}/package/luci-app-rsop/
+          path: ${{ steps.sdk.outputs.sdk_dir }}/package/${{ env.project_name }}/
 
       - name: Get version
         id: get_version
         shell: bash
         run: |
-          cd ${{ steps.sdk.outputs.sdk_dir }}/package/luci-app-rsop/
+          cd ${{ steps.sdk.outputs.sdk_dir }}/package/${{ env.project_name }}/
           VERSION=$(grep -E "^PKG_VERSION[[:space:]]*:=" Makefile | sed -E 's/.*:=[[:space:]]*//' | tr -d '[:space:]')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Prepare before compile
         shell: bash
         run: |
-          cd ${{ steps.sdk.outputs.sdk_dir }}/package/luci-app-rsop/
+          cd ${{ steps.sdk.outputs.sdk_dir }}/package/${{ env.project_name }}/
           if [ "${{ matrix.patch_arch }}" != "x86_64" ]; then
             sed -i 's/x86_64/${{ matrix.patch_arch }}/g' ./Makefile
           fi
