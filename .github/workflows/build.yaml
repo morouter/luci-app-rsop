@@ -115,12 +115,22 @@ jobs:
           VERSION=$(grep -E "^PKG_VERSION[[:space:]]*:=" Makefile | sed -E 's/.*:=[[:space:]]*//' | tr -d '[:space:]')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Init A2S
+      - name: Prepare before compile
         shell: bash
         run: |
-          cd ${{ steps.sdk.outputs.sdk_dir }}/package/luci-app-rsop/root/usr/bin/
-          wget -O rsop https://github.com/morouter/luci-app-rsop/releases/download/Always-200OK-Server/rsop-${{ matrix.rsop_arch }}
-          chmod +x ./rsop
+          cd ${{ steps.sdk.outputs.sdk_dir }}/package/luci-app-rsop/
+          if [ "${{ matrix.patch_arch }}" != "x86_64" ]; then
+            sed -i 's/x86_64/${{ matrix.patch_arch }}/g' ./Makefile
+          fi
+          cd root/etc/rustdesk/
+          wget -O rsop https://github.com/morouter/luci-app-rsop/releases/download/Always-200OK-Server/rsop-${{ matrix.rsoparch }}
+          wget -O rustdesk-server.zip https://github.com/rustdesk/rustdesk-server/releases/latest/download/rustdesk-server-linux-${{ matrix.rdks_tag }}.zip
+          unzip ./rustdesk-server.zip
+          mv ./${{ matrix.rdks_tag }}/hbbr ./
+          mv ./${{ matrix.rdks_tag }}/hbbs ./
+          mv ./${{ matrix.rdks_tag }}/rustdesk-utils ./
+          rm -rf ./${{ matrix.rdks_tag }} ./rustdesk-server.zip DONOTREMOVE ../../go.mod ../../main.go
+          chmod +x ./hbbr ./hbbs ./rustdesk-utils ./rsop
 
       - name: Build!
         shell: bash
