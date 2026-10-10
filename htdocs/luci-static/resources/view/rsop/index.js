@@ -31,11 +31,13 @@ async function getServiceStatus() {
 
 async function getBinaryStatus() {
   const res = await Promise.all([
-    L.resolveDefault(fs.stat("/usr/bin/rsop"), null),
-    L.resolveDefault(fs.stat("/usr/bin/hbbs"), null),
-    L.resolveDefault(fs.stat("/usr/bin/hbbr"), null),
+    L.resolveDefault(fs.stat("/etc/rustdesk/rsop"), null),
+    L.resolveDefault(fs.stat("/etc/rustdesk/hbbs"), null),
+    L.resolveDefault(fs.stat("/etc/rustdesk/hbbr"), null),
   ]);
-  return res[0] != null && res[1] != null && res[2] != null;
+  return res.every(function (stat) {
+    return stat != null && stat.type === "file" && (stat.mode & 0o111) !== 0;
+  });
 }
 
 async function getServerKey() {
