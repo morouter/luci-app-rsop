@@ -111,7 +111,7 @@ return view.extend({
           readonly: "readonly",
           rows: "1",
           style:
-            "width:100%;max-width:800px;height:2.5em;min-height:2.5em;resize:none;box-sizing:border-box",
+            "width:3em;height:4em;resize:none;box-sizing:border-box",
           placeholder: _("No key yet. Start the service once to generate it."),
         }),
         E(
