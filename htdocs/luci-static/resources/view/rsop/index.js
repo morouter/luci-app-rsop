@@ -82,32 +82,8 @@ return view.extend({
     s.anonymous = true;
     s.render = function () {
       poll.add(updateStatus);
-      return E("div", { class: "cbi-section" }, [
+      return E("div", { class: "cbi-section", id: "status_bar" }, [
         E("p", { id: "service_status" }, _("Collecting data...")),
-        E("div", { class: "cbi-value" }, [
-          E("label", { class: "cbi-value-title" }, _("Connection Public Key")),
-          E("div", { class: "cbi-value-field" }, [
-            E("textarea", {
-              id: "server_key",
-              class: "cbi-input-textarea",
-              readonly: "readonly",
-              rows: "2",
-              style: "width:100%;max-width:600px",
-              placeholder: _(
-                "No key yet. Start the service once to generate it.",
-              ),
-            }),
-            E(
-              "button",
-              {
-                class: "cbi-button cbi-button-action",
-                style: "margin-top:6px",
-                click: copyServerKey,
-              },
-              _("Copy"),
-            ),
-          ]),
-        ]),
       ]);
     };
 
@@ -120,6 +96,34 @@ return view.extend({
     o = s.taboption("general", form.Flag, "enabled", _("Enable Service"));
     o.rmempty = false;
     o.default = "1";
+
+    o = s.taboption(
+      "general",
+      form.DummyValue,
+      "server_key",
+      _("Connection Public Key"),
+    );
+    o.renderWidget = function () {
+      return E("div", {}, [
+        E("textarea", {
+          id: "server_key",
+          class: "cbi-input-textarea",
+          readonly: "readonly",
+          rows: "2",
+          style: "width:100%;max-width:600px",
+          placeholder: _("No key yet. Start the service once to generate it."),
+        }),
+        E(
+          "button",
+          {
+            class: "cbi-button cbi-button-action",
+            style: "margin-top:6px",
+            click: copyServerKey,
+          },
+          _("Copy"),
+        ),
+      ]);
+    };
 
     o = s.taboption("general", form.Value, "listen", _("Listen Address"));
     o.datatype = "ipaddr";
