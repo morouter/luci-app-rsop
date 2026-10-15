@@ -21,7 +21,7 @@ toml_escape() {
 write_config() {
     local enabled listen relay_server http_port nat_port id_port relay_port
     local websocket_port web_api_port log_path log_level log_color max_size
-    local max_files max_connections max_frame_size
+    local max_files max_connections max_frame_size enforce_key
 
     config_load rsop
     config_get_bool enabled main enabled 0
@@ -41,6 +41,7 @@ write_config() {
     config_get max_files main max_files '4'
     config_get max_connections main max_connections '4096'
     config_get max_frame_size main max_frame_size '16777216'
+    config_get_bool enforce_key main enforce_key 1
     case "$log_path" in
         /*) ;;
         *) log_path="$DATA_DIR/$log_path" ;;
@@ -68,6 +69,7 @@ write_config() {
         printf '[extra]\n'
         printf 'max_connections = %s\n' "$max_connections"
         printf 'max_frame_size = %s\n' "$max_frame_size"
+        [ "$enforce_key" -eq 1 ] && printf 'enforce_key = true\n' || printf 'enforce_key = false\n'
     } >"$CONFIG_FILE"
 }
 

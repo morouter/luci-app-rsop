@@ -48,6 +48,12 @@ msgstr "啟動服務"
 msgid "Connection Public Key"
 msgstr "連線公鑰"
 
+msgid "Verify Client Key"
+msgstr "驗證用戶端金鑰"
+
+msgid "Reject clients that do not provide the correct public key."
+msgstr "拒絕未提供正確公鑰的用戶端。"
+
 msgid "Copy"
 msgstr "複製"
 

@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   build:
-    name: Build for ${{ matrix.patch_arch }}
+    name: Build for ${{ matrix.pkg_arch }}
     runs-on: ubuntu-latest
     env:
       project_name: luci-app-rsop
@@ -18,13 +18,13 @@ jobs:
       matrix:
         include:
           - server_asset: "linux-musl-amd64"
-            patch_arch: "x86_64"
+            pkg_arch: "x86_64"
             sdk_arch: "x86-64"
           - server_asset: "linux-musl-arm64v8"
-            patch_arch: "aarch64_generic"
+            pkg_arch: "aarch64_generic"
             sdk_arch: "rockchip-armv8"
           - server_asset: "linux-musl-arm64v8"
-            patch_arch: "aarch64_cortex-a53"
+            pkg_arch: "aarch64_cortex-a53"
             sdk_arch: "mediatek-filogic"
 
     steps:
@@ -56,8 +56,8 @@ jobs:
         shell: bash
         run: |
           cd ${{ steps.sdk.outputs.sdk_dir }}/package/${{ env.project_name }}/
-          if [ "${{ matrix.patch_arch }}" != "x86_64" ]; then
-            sed -i 's/x86_64/${{ matrix.patch_arch }}/g' ./Makefile
+          if [ "${{ matrix.pkg_arch }}" != "x86_64" ]; then
+            sed -i 's/x86_64/${{ matrix.pkg_arch }}/g' ./Makefile
           fi
           cd root/etc/rustdesk/
           wget -O go-rustdesk-server https://github.com/moaeiou/go-rustdesk-server/releases/latest/download/go-rustdesk-server-${{ matrix.server_asset }}
@@ -73,10 +73,10 @@ jobs:
       - name: Rename compilation files
         shell: bash
         run: |
-          mv ${{ steps.sdk.outputs.sdk_dir }}/bin/packages/*/base/luci-app-*.apk ./luci-app-rsop-${{ matrix.patch_arch }}.apk
+          mv ${{ steps.sdk.outputs.sdk_dir }}/bin/packages/*/base/luci-app-*.apk ./luci-app-rsop-${{ matrix.pkg_arch }}.apk
           mv ${{ steps.sdk.outputs.sdk_dir }}/bin/packages/*/base/luci-i18n-rsop-zh-cn-*.apk ./luci-i18n-rsop-zh-cn.apk
           mv ${{ steps.sdk.outputs.sdk_dir }}/bin/packages/*/base/luci-i18n-rsop-zh-tw-*.apk ./luci-i18n-rsop-zh-tw.apk
-          ln -s ./luci-app-rsop-${{ matrix.patch_arch }}.apk ./luci-app-rsop-${{ steps.get_version.outputs.version }}-${{ matrix.patch_arch }}.apk
+          ln -s ./luci-app-rsop-${{ matrix.pkg_arch }}.apk ./luci-app-rsop-${{ steps.get_version.outputs.version }}-${{ matrix.pkg_arch }}.apk
 
       - name: Release
         uses: softprops/action-gh-release@master
@@ -84,7 +84,7 @@ jobs:
           tag_name: V${{ steps.get_version.outputs.version }}
           files: |
             luci-i18n-rsop-*.apk
-            luci-app-rsop-${{ steps.get_version.outputs.version }}-${{ matrix.patch_arch }}.apk
+            luci-app-rsop-${{ steps.get_version.outputs.version }}-${{ matrix.pkg_arch }}.apk
           body: |
             # 📝 Release Notes
             - Fixes and improvements
@@ -96,7 +96,7 @@ jobs:
       - name: Send to mirror
         uses: moaeiou/moaeiou/actions/rsync@main
         with:
-          local: luci-i18n-rsop-*.apk luci-app-rsop-${{ matrix.patch_arch }}.apk
+          local: luci-i18n-rsop-*.apk luci-app-rsop-${{ matrix.pkg_arch }}.apk
           remote: luci-app/rsop/
           key: ${{ secrets.SSH_KEY }}
           extra: --exclude='a2s/'

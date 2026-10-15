@@ -109,8 +109,9 @@ return view.extend({
           id: "server_key",
           class: "cbi-input-textarea",
           readonly: "readonly",
-          rows: "2",
-          style: "width:100%;max-width:600px",
+          rows: "1",
+          style:
+            "width:100%;max-width:800px;height:2.5em;min-height:2.5em;resize:none;box-sizing:border-box",
           placeholder: _("No key yet. Start the service once to generate it."),
         }),
         E(
@@ -124,6 +125,16 @@ return view.extend({
         ),
       ]);
     };
+
+    o = s.taboption(
+      "general",
+      form.Flag,
+      "enforce_key",
+      _("Verify Client Key"),
+      _("Reject clients that do not provide the correct public key."),
+    );
+    o.default = "1";
+    o.rmempty = false;
 
     o = s.taboption("general", form.Value, "listen", _("Listen Address"));
     o.datatype = "ipaddr";

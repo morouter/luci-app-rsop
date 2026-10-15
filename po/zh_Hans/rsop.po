@@ -48,6 +48,12 @@ msgstr "启动服务"
 msgid "Connection Public Key"
 msgstr "连接公钥"
 
+msgid "Verify Client Key"
+msgstr "校验客户端密钥"
+
+msgid "Reject clients that do not provide the correct public key."
+msgstr "拒绝未提供正确公钥的客户端。"
+
 msgid "Copy"
 msgstr "复制"
 
