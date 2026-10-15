@@ -12,6 +12,42 @@ msgstr "概览"
 msgid "Logs"
 msgstr "日志"
 
+msgid "Config"
+msgstr "配置"
+
+msgid "RustDesk Server Logs"
+msgstr "RustDesk 服务器日志"
+
+msgid "Log is empty."
+msgstr "日志为空。"
+
+msgid "Log file does not exist."
+msgstr "日志文件不存在。"
+
+msgid "Unknown error: %s"
+msgstr "未知错误：%s"
+
+msgid "Clear log"
+msgstr "清空日志"
+
+msgid "This will permanently erase the current log file. Continue?"
+msgstr "这将永久清空当前日志文件，是否继续？"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Delete"
+msgstr "删除"
+
+msgid "Failed to clear log: %s"
+msgstr "清空日志失败：%s"
+
+msgid "Refresh"
+msgstr "刷新"
+
+msgid "Refresh every %s seconds."
+msgstr "每 %s 秒刷新一次。"
+
 msgid "Rustdesk Server for OpenWrt with LuCI Support."
 msgstr "Rustdesk Server的OpenWrt LuCI支持。"
 
@@ -47,6 +83,9 @@ msgstr "启动服务"
 
 msgid "Connection Public Key"
 msgstr "连接公钥"
+
+msgid "Copy Public Key"
+msgstr "复制公钥"
 
 msgid "Verify Client Key"
 msgstr "校验客户端密钥"

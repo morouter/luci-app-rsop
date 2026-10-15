@@ -4,8 +4,8 @@ STOP=10
 USE_PROCD=1
 
 DATA_DIR="/etc/rustdesk"
-SERVER_BIN="$DATA_DIR/go-rustdesk-server"
-CONFIG_FILE="/var/etc/rsop.toml"
+SERVER_BIN="/usr/bin/go-rustdesk-server"
+CONFIG_FILE="$DATA_DIR/config.toml"
 
 check_binary() {
     if [ ! -x "$1" ]; then
@@ -83,8 +83,7 @@ start_service() {
     check_binary "$SERVER_BIN" || return 1
 
     procd_open_instance "server"
-    procd_set_param command "$SERVER_BIN"
-    procd_set_param env "RUSTDESK_CONFIG=$CONFIG_FILE"
+    procd_set_param command "$SERVER_BIN" run -c "$CONFIG_FILE"
     procd_set_param respawn 3600 3 3
     procd_set_param stdout 1
     procd_set_param stderr 1

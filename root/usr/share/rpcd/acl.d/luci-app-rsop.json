@@ -4,7 +4,9 @@
     "read": {
       "file": {
         "/etc/rustdesk/*": ["stat"],
-        "/etc/rustdesk/id_ed25519.pub": ["read"]
+        "/etc/rustdesk/id_ed25519.pub": ["read"],
+        "/usr/bin/go-rustdesk-server": ["stat"],
+        "/usr/share/rsop/tail-log": ["exec"]
       },
       "uci": ["rsop"],
       "ubus": {
@@ -13,6 +15,9 @@
       }
     },
     "write": {
+      "file": {
+        "/etc/rustdesk/rdks.log": ["write"]
+      },
       "uci": ["rsop"],
       "ubus": {
         "rc": ["init"]

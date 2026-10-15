@@ -3,11 +3,26 @@
     "title": "RustDesk",
     "order": 99,
     "action": {
-      "type": "view",
-      "path": "rsop/index"
+      "type": "firstchild"
     },
     "depends": {
       "acl": ["luci-app-rsop"]
+    }
+  },
+  "admin/services/rsop/config": {
+    "title": "Config",
+    "order": 1,
+    "action": {
+      "type": "view",
+      "path": "rsop/index"
+    }
+  },
+  "admin/services/rsop/log": {
+    "title": "Logs",
+    "order": 2,
+    "action": {
+      "type": "view",
+      "path": "rsop/log"
     }
   }
 }

@@ -16,13 +16,13 @@ var callServiceList = rpc.declare({
 async function updateStatus() {
   const res = await Promise.all([
     L.resolveDefault(callServiceList("rsop"), {}),
-    L.resolveDefault(fs.stat("/etc/rustdesk/go-rustdesk-server"), null),
+    L.resolveDefault(fs.stat("/usr/bin/go-rustdesk-server"), null),
     L.resolveDefault(fs.read("/etc/rustdesk/id_ed25519.pub"), null),
   ]);
   const instances = (res[0].rsop && res[0].rsop.instances) || {};
   const running = !!(instances.server && instances.server.running);
   const status = document.getElementById("service_status");
-  const key = document.getElementById("server_key");
+  const key = document.getElementById("widget.cbid.rsop.main.server_key");
 
   if (status) {
     const state = !res[1]
@@ -42,7 +42,7 @@ async function updateStatus() {
 }
 
 function copyServerKey() {
-  const key = document.getElementById("server_key");
+  const key = document.getElementById("widget.cbid.rsop.main.server_key");
   if (!key || !key.value) return;
   const notify = function (ok) {
     ui.addNotification(null, E("p", {}, ok ? _("Copied!") : _("Copy failed")));
@@ -99,32 +99,40 @@ return view.extend({
 
     o = s.taboption(
       "general",
-      form.DummyValue,
+      form.TextValue,
       "server_key",
       _("Connection Public Key"),
     );
-    o.renderWidget = function () {
-      return E("div", {}, [
-        E("textarea", {
-          id: "server_key",
-          class: "cbi-input-textarea",
-          readonly: "readonly",
-          rows: "1",
-          style:
-            "width:3em;height:4em;resize:none;box-sizing:border-box",
-          placeholder: _("No key yet. Start the service once to generate it."),
-        }),
-        E(
-          "button",
-          {
-            class: "cbi-button cbi-button-action",
-            style: "margin-top:6px",
-            click: copyServerKey,
-          },
-          _("Copy"),
-        ),
-      ]);
+    o.readonly = true;
+    o.rows = 1;
+    o.cols = 90;
+    o.placeholder = _("No key yet. Start the service once to generate it.");
+    o.cfgvalue = function () {
+      return "";
     };
+    o.write = function () {};
+    o.remove = function () {};
+    o.renderWidget = function () {
+      var node = form.TextValue.prototype.renderWidget.apply(this, arguments);
+      var textarea = node.querySelector("textarea");
+      textarea.style.width = "100%";
+      textarea.style.maxWidth = "900px";
+      textarea.style.height = "2.5em";
+      textarea.style.minHeight = "2.5em";
+      textarea.style.resize = "none";
+      textarea.style.boxSizing = "border-box";
+      return node;
+    };
+
+    o = s.taboption(
+      "general",
+      form.Button,
+      "_copy_server_key",
+      _("Copy Public Key"),
+    );
+    o.inputstyle = "action";
+    o.inputtitle = _("Copy");
+    o.onclick = copyServerKey;
 
     o = s.taboption(
       "general",

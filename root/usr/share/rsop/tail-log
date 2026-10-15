@@ -1,0 +1,26 @@
+#!/bin/sh
+
+LOG='/etc/rustdesk/rdks.log'
+START=${1:-}
+
+if [ ! -f "$LOG" ]; then
+    echo "Log file not found: $LOG" >&2
+    exit 1
+fi
+
+case "$START" in
+    '') exec tail -n 1000 "$LOG" ;;
+    *[!0-9]*)
+        echo "Invalid line number: $START" >&2
+        exit 1
+        ;;
+esac
+
+TOTAL=$(awk 'END { print NR }' "$LOG")
+echo "$TOTAL"
+
+if [ "$START" -le 0 ]; then
+    tail -n 1000 "$LOG"
+else
+    tail -n +"$START" "$LOG"
+fi

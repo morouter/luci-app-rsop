@@ -59,10 +59,9 @@ jobs:
           if [ "${{ matrix.pkg_arch }}" != "x86_64" ]; then
             sed -i 's/x86_64/${{ matrix.pkg_arch }}/g' ./Makefile
           fi
-          cd root/etc/rustdesk/
-          wget -O go-rustdesk-server https://github.com/moaeiou/go-rustdesk-server/releases/latest/download/go-rustdesk-server-${{ matrix.server_asset }}
-          rm -f DONOTREMOVE
-          chmod +x ./go-rustdesk-server
+          mkdir -p root/usr/bin
+          wget -O root/usr/bin/go-rustdesk-server https://github.com/moaeiou/go-rustdesk-server/releases/latest/download/go-rustdesk-server-${{ matrix.server_asset }}
+          chmod +x root/usr/bin/go-rustdesk-server
 
       - name: Build!
         shell: bash

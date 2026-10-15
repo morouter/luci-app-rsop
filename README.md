@@ -22,11 +22,11 @@ And some extra commands:
 
 ```bash
 # Make sure you are at the root directory of this project.
-cd root/etc/rustdesk
-rm DONOTREMOVE
+mkdir -p root/usr/bin
+cd root/usr/bin
 wget -O go-rustdesk-server https://github.com/moaeiou/go-rustdesk-server/releases/latest/download/go-rustdesk-server-linux-musl-YourCPUArch
 chmod +x go-rustdesk-server
-cd ../../../
+cd ../../..
 # For the next step: See generic guide
 ```
 
