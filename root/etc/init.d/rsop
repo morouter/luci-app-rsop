@@ -4,9 +4,8 @@ STOP=10
 USE_PROCD=1
 
 DATA_DIR="/etc/rustdesk"
-RSOP_BIN="$DATA_DIR/rsop"
-HBBS_BIN="$DATA_DIR/hbbs"
-HBBR_BIN="$DATA_DIR/hbbr"
+SERVER_BIN="$DATA_DIR/go-rustdesk-server"
+CONFIG_FILE="/var/etc/rsop.toml"
 
 check_binary() {
     if [ ! -x "$1" ]; then
@@ -15,29 +14,86 @@ check_binary() {
     fi
 }
 
+toml_escape() {
+    printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
+}
+
+write_config() {
+    local enabled listen relay_server http_port nat_port id_port relay_port
+    local websocket_port web_api_port log_path log_level log_color max_size
+    local max_files max_connections max_frame_size
+
+    config_load rsop
+    config_get_bool enabled main enabled 0
+    [ "$enabled" -eq 1 ] || return 2
+    config_get listen main listen '::'
+    config_get relay_server main relay_server ''
+    config_get http_port main http_port '21114'
+    config_get nat_port main nat_port '21115'
+    config_get id_port main id_port '21116'
+    config_get relay_port main relay_port '21117'
+    config_get websocket_port main websocket_port '21118'
+    config_get web_api_port main web_api_port '21119'
+    config_get log_path main log_path 'rdks.log'
+    config_get log_level main log_level 'info'
+    config_get_bool log_color main log_color 0
+    config_get max_size main max_size '10485760'
+    config_get max_files main max_files '4'
+    config_get max_connections main max_connections '4096'
+    config_get max_frame_size main max_frame_size '16777216'
+    case "$log_path" in
+        /*) ;;
+        *) log_path="$DATA_DIR/$log_path" ;;
+    esac
+
+    mkdir -p "${CONFIG_FILE%/*}" "$DATA_DIR" || return 1
+    umask 077
+    {
+        printf '[base]\n'
+        printf 'listen = "%s"\n' "$(toml_escape "$listen")"
+        printf 'relay_server = "%s"\n' "$(toml_escape "$relay_server")"
+        printf 'http_port = %s\n' "$http_port"
+        printf 'nat_port = %s\n' "$nat_port"
+        printf 'id_port = %s\n' "$id_port"
+        printf 'relay_port = %s\n' "$relay_port"
+        printf 'websocket_port = %s\n' "$websocket_port"
+        printf 'web_api_port = %s\n' "$web_api_port"
+        printf 'data_dir = "%s"\n\n' "$DATA_DIR"
+        printf '[log]\n'
+        printf 'log_path = "%s"\n' "$(toml_escape "$log_path")"
+        printf 'log_level = "%s"\n' "$(toml_escape "$log_level")"
+        [ "$log_color" -eq 1 ] && printf 'log_color = true\n' || printf 'log_color = false\n'
+        printf 'max_size = %s\n' "$max_size"
+        printf 'max_files = %s\n\n' "$max_files"
+        printf '[extra]\n'
+        printf 'max_connections = %s\n' "$max_connections"
+        printf 'max_frame_size = %s\n' "$max_frame_size"
+    } >"$CONFIG_FILE"
+}
+
 start_service() {
-    check_binary "$RSOP_BIN" || return 1
-    check_binary "$HBBS_BIN" || return 1
-    check_binary "$HBBR_BIN" || return 1
+    write_config
+    case "$?" in
+        0) ;;
+        2) return 0 ;;
+        *) return 1 ;;
+    esac
+    check_binary "$SERVER_BIN" || return 1
 
-    procd_open_instance "rsop"
-    procd_set_param command "$RSOP_BIN"
+    procd_open_instance "server"
+    procd_set_param command "$SERVER_BIN"
+    procd_set_param env "RUSTDESK_CONFIG=$CONFIG_FILE"
     procd_set_param respawn 3600 3 3
     procd_set_param stdout 1
     procd_set_param stderr 1
     procd_close_instance
+}
 
-    procd_open_instance "hbbs"
-    procd_set_param command "/bin/sh" "-c" "cd \"$DATA_DIR\" && exec \"$HBBS_BIN\""
-    procd_set_param respawn 3600 3 3
-    procd_set_param stdout 1
-    procd_set_param stderr 1
-    procd_close_instance
+service_triggers() {
+    procd_add_reload_trigger "rsop"
+}
 
-    procd_open_instance "hbbr"
-    procd_set_param command "/bin/sh" "-c" "cd \"$DATA_DIR\" && exec \"$HBBR_BIN\""
-    procd_set_param respawn 3600 3 3
-    procd_set_param stdout 1
-    procd_set_param stderr 1
-    procd_close_instance
+reload_service() {
+    stop
+    start
 }

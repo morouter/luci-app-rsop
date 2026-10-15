@@ -74,3 +74,69 @@ msgstr "複製失敗"
 
 msgid "Loading..."
 msgstr "載入中..."
+
+msgid "RustDesk Server"
+msgstr "RustDesk 伺服器"
+
+msgid "General"
+msgstr "一般"
+
+msgid "Ports"
+msgstr "連接埠"
+
+msgid "Logging"
+msgstr "日誌"
+
+msgid "Advanced"
+msgstr "進階"
+
+msgid "Enable Service"
+msgstr "啟用服務"
+
+msgid "Listen Address"
+msgstr "監聽位址"
+
+msgid "Public Relay Address"
+msgstr "公網中繼位址"
+
+msgid "Automatically detect when empty"
+msgstr "留空時自動偵測"
+
+msgid "HTTP Compatibility Port"
+msgstr "HTTP 相容連接埠"
+
+msgid "NAT Test Port"
+msgstr "NAT 測試連接埠"
+
+msgid "ID and Rendezvous Port"
+msgstr "ID 與會合連接埠"
+
+msgid "Relay Port"
+msgstr "中繼連接埠"
+
+msgid "WebSocket Port"
+msgstr "WebSocket 連接埠"
+
+msgid "Web API Port"
+msgstr "Web API 連接埠"
+
+msgid "Log File"
+msgstr "日誌檔案"
+
+msgid "Log Level"
+msgstr "日誌等級"
+
+msgid "Colored Logs"
+msgstr "彩色日誌"
+
+msgid "Maximum Log Size (bytes)"
+msgstr "日誌檔案大小上限（位元組）"
+
+msgid "Retained Log Files"
+msgstr "保留日誌檔案數"
+
+msgid "Maximum Connections"
+msgstr "最大連線數"
+
+msgid "Maximum Frame Size (bytes)"
+msgstr "最大訊框大小（位元組）"

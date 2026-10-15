@@ -6,12 +6,14 @@
         "/etc/rustdesk/*": ["stat"],
         "/etc/rustdesk/id_ed25519.pub": ["read"]
       },
+      "uci": ["rsop"],
       "ubus": {
         "file": ["read", "stat"],
         "service": ["list"]
       }
     },
     "write": {
+      "uci": ["rsop"],
       "ubus": {
         "rc": ["init"]
       }

@@ -4,14 +4,15 @@ Rustdesk Server for OpenWrt with LuCI Support.
 
 ## 🚀 Features
 
-- Built-in latest version of Rustdesk-Server and A Fake API server.
+- Built-in latest version of [go-rustdesk-server](https://github.com/moaeiou/go-rustdesk-server).
+- One backend process provides the ID, rendezvous, relay, NAT-test, WebSocket and HTTP compatibility services.
+- Server settings are managed through LuCI/UCI; the runtime TOML file is generated automatically.
 - It can run smoothly with just a few lines of commands.
 - It can be set as a daemon process and start automatically on boot.
 
 ## ⬇️ Downloads
 
 [GitHub Release](https://github.com/morouter/luci-app-rsop/releases)
-[Always OK Server](https://github.com/morouter/luci-app-rsop/releases/tag/Always-200OK-Server)
 
 ## 🛠 How to build
 
@@ -20,17 +21,19 @@ Rustdesk Server for OpenWrt with LuCI Support.
 And some extra commands:
 
 ```bash
-# Make sure you at root directory of this project
-rm root/usr/bin/DONOTREMOVE
-wget -O rsop https://github.com/morouter/luci-app-rsop/releases/download/Always-200OK-Server/rsop-YourCPUArch
+# Make sure you are at the root directory of this project.
+cd root/etc/rustdesk
+rm DONOTREMOVE
+wget -O go-rustdesk-server https://github.com/moaeiou/go-rustdesk-server/releases/latest/download/go-rustdesk-server-linux-musl-YourCPUArch
+chmod +x go-rustdesk-server
 cd ../../../
-# See generic guide
+# For the next step: See generic guide
 ```
 
 ## ⚖️ License
 
 This project has been licensed under the [GNU Affero General Public License Version 3 (AGPL-3.0)](https://www.gnu.org/licenses/agpl-3.0.html).
 
-This project has included the [RustDesk-Server](https://github.com/rustdesk/rustdesk-server).
+This project includes [go-rustdesk-server](https://github.com/moaeiou/go-rustdesk-server).
 
 And [the log page](https://github.com/Internet1235/luci-app-openlist/blob/main/luci-app-openlist/htdocs/luci-static/resources/view/openlist/log.js) licensed under the MIT, So in this project I change it to `AGPL-v3`.

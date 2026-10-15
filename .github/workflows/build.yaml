@@ -8,67 +8,7 @@ permissions:
   contents: write
 
 jobs:
-  a2s:
-    name: Build Always OK Server for ${{ matrix.dickname }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - tag: "CGO_ENABLED=0"
-            dickname: "amd64"
-          - tag: "CGO_ENABLED=0 GOARCH=arm64"
-            dickname: "arm64"
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@main
-
-      - name: Fuck GitHub cache
-        shell: bash
-        run: |
-          mv ./go.mod ./go.mod.backup
-
-      - name: Set up Go
-        uses: actions/setup-go@main
-        with:
-          go-version: "stable"
-
-      - name: Build!
-        shell: bash
-        run: |
-          mv ./go.mod.backup ./go.mod
-          ${{ matrix.tag }} go build -o rsop-${{ matrix.dickname }}
-
-      - name: Release
-        uses: softprops/action-gh-release@master
-        with:
-          tag_name: Always-200OK-Server
-          files: rsop-${{ matrix.dickname }}
-          body: |
-            # 一个永远返回200OK的Web服务器
-
-            如果你也经常使用Rustdesk，你应该会遇到客户端频繁向服务端的21114端口发送http请求以获取状态。
-            这本来很正常对吧，但是如果你使用代理，那么你将看到一大堆错误请求出现在代理日志中！这十分影响排查代理问题！
-            于是，鉴于普通用户不需要Rustdesk的网页端功能，所以我用Go语言写了一个简短的程序。
-            作用是监听21114端口，对过来的所有数据都表示一个200OK然后关闭连接。
-            现在，代理工具中再也不会显示错误了。
-
-            ## ⚖️ 条款与许可
-            该软件以GNU AGPL-v3或更新版本授权。
-            作者不对使用该软件产生的任何后果负责。
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Send to mirror
-        uses: moaeiou/moaeiou/actions/rsync@main
-        with:
-          local: rsop-${{ matrix.dickname }}
-          remote: luci-app/rsop/a2s/
-          key: ${{ secrets.SSH_KEY }}
-
   build:
-    needs: a2s
     name: Build for ${{ matrix.patch_arch }}
     runs-on: ubuntu-latest
     env:
@@ -77,16 +17,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - rdks_tag: "amd64"
-            rsop_arch: "amd64"
+          - server_asset: "linux-musl-amd64"
             patch_arch: "x86_64"
             sdk_arch: "x86-64"
-          - rdks_tag: "arm64v8"
-            rsop_arch: "arm64"
+          - server_asset: "linux-musl-arm64v8"
             patch_arch: "aarch64_generic"
             sdk_arch: "rockchip-armv8"
-          - rdks_tag: "arm64v8"
-            rsop_arch: "arm64"
+          - server_asset: "linux-musl-arm64v8"
             patch_arch: "aarch64_cortex-a53"
             sdk_arch: "mediatek-filogic"
 
@@ -123,14 +60,9 @@ jobs:
             sed -i 's/x86_64/${{ matrix.patch_arch }}/g' ./Makefile
           fi
           cd root/etc/rustdesk/
-          wget -O rsop https://github.com/morouter/luci-app-rsop/releases/download/Always-200OK-Server/rsop-${{ matrix.rsop_arch }}
-          wget -O rustdesk-server.zip https://github.com/rustdesk/rustdesk-server/releases/latest/download/rustdesk-server-linux-${{ matrix.rdks_tag }}.zip
-          unzip ./rustdesk-server.zip
-          mv ./${{ matrix.rdks_tag }}/hbbr ./
-          mv ./${{ matrix.rdks_tag }}/hbbs ./
-          mv ./${{ matrix.rdks_tag }}/rustdesk-utils ./
-          rm -rf ./${{ matrix.rdks_tag }} ./rustdesk-server.zip DONOTREMOVE ../../go.mod ../../main.go
-          chmod +x ./hbbr ./hbbs ./rustdesk-utils ./rsop
+          wget -O go-rustdesk-server https://github.com/moaeiou/go-rustdesk-server/releases/latest/download/go-rustdesk-server-${{ matrix.server_asset }}
+          rm -f DONOTREMOVE
+          chmod +x ./go-rustdesk-server
 
       - name: Build!
         shell: bash
@@ -156,6 +88,8 @@ jobs:
           body: |
             # 📝 Release Notes
             - Fixes and improvements
+            # ⚠️ WARNING
+            - This is a broken change , please full delete the old version before installing this version.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
