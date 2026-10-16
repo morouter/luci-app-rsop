@@ -5,6 +5,7 @@
       "file": {
         "/etc/rustdesk/*": ["stat"],
         "/etc/rustdesk/id_ed25519.pub": ["read"],
+        "/etc/rustdesk/rdks.log": ["read"],
         "/usr/bin/go-rustdesk-server": ["stat"],
         "/usr/share/rsop/tail-log": ["exec"]
       },

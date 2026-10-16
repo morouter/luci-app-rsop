@@ -84,6 +84,14 @@ return view.extend({
       poll.add(updateStatus);
       return E("div", { class: "cbi-section", id: "status_bar" }, [
         E("p", { id: "service_status" }, _("Collecting data...")),
+        E(
+          "a",
+          {
+            class: "cbi-button cbi-button-action",
+            href: L.url("admin/services/rsop/log"),
+          },
+          _("View Logs"),
+        ),
       ]);
     };
 

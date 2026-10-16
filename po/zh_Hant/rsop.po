@@ -12,6 +12,9 @@ msgstr "總覽"
 msgid "Logs"
 msgstr "日誌"
 
+msgid "View Logs"
+msgstr "檢視日誌"
+
 msgid "Config"
 msgstr "設定"
 
@@ -44,6 +47,12 @@ msgstr "清空日誌失敗：%s"
 
 msgid "Refresh"
 msgstr "重新整理"
+
+msgid "Export log"
+msgstr "匯出日誌"
+
+msgid "Failed to export log: %s"
+msgstr "匯出日誌失敗：%s"
 
 msgid "Refresh every %s seconds."
 msgstr "每 %s 秒重新整理一次。"

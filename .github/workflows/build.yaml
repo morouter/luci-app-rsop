@@ -88,8 +88,6 @@ jobs:
           body: |
             # 📝 Release Notes
             - Fixes and improvements
-            # ⚠️ WARNING
-            - This is a broken change , please full delete the old version before installing this version.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

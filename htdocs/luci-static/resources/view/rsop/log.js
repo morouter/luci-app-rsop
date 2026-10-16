@@ -153,6 +153,34 @@ return view.extend({
       ]);
     }
 
+    function handleDownloadLog() {
+      return fs
+        .read_direct("/etc/rustdesk/rdks.log", "blob")
+        .then(function (content) {
+          var url = URL.createObjectURL(content);
+          var link = E("a", {
+            href: url,
+            download:
+              "rustdesk-server-" +
+              new Date().toISOString().replace(/[:.]/g, "-") +
+              ".log",
+            style: "display:none",
+          });
+
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          URL.revokeObjectURL(url);
+        })
+        .catch(function (err) {
+          ui.addNotification(
+            null,
+            E("p", {}, _("Failed to export log: %s").format(err)),
+            "error",
+          );
+        });
+    }
+
     poll.add(L.bind(refreshLog, this), refreshInterval);
 
     return E([
@@ -185,6 +213,15 @@ return view.extend({
                     click: ui.createHandlerFn(this, refreshLog),
                   },
                   _("Refresh"),
+                ),
+                " ",
+                E(
+                  "button",
+                  {
+                    class: "btn cbi-button-action",
+                    click: ui.createHandlerFn(this, handleDownloadLog),
+                  },
+                  _("Export log"),
                 ),
               ]),
               E(
