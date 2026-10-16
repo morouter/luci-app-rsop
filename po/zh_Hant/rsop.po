@@ -12,9 +12,6 @@ msgstr "總覽"
 msgid "Logs"
 msgstr "日誌"
 
-msgid "View Logs"
-msgstr "檢視日誌"
-
 msgid "Config"
 msgstr "設定"
 

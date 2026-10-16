@@ -84,14 +84,6 @@ return view.extend({
       poll.add(updateStatus);
       return E("div", { class: "cbi-section", id: "status_bar" }, [
         E("p", { id: "service_status" }, _("Collecting data...")),
-        E(
-          "a",
-          {
-            class: "cbi-button cbi-button-action",
-            href: L.url("admin/services/rsop/log"),
-          },
-          _("View Logs"),
-        ),
       ]);
     };
 
@@ -124,9 +116,9 @@ return view.extend({
       var node = form.TextValue.prototype.renderWidget.apply(this, arguments);
       var textarea = node.querySelector("textarea");
       textarea.style.width = "100%";
-      textarea.style.maxWidth = "900px";
-      textarea.style.height = "2.5em";
-      textarea.style.minHeight = "2.5em";
+      textarea.style.maxWidth = "600px";
+      textarea.style.height = "4em";
+      textarea.style.minHeight = "4em";
       textarea.style.resize = "none";
       textarea.style.boxSizing = "border-box";
       textarea.style.display = "block";

@@ -12,9 +12,6 @@ msgstr "概览"
 msgid "Logs"
 msgstr "日志"
 
-msgid "View Logs"
-msgstr "查看日志"
-
 msgid "Config"
 msgstr "配置"
 
