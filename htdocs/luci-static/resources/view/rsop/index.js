@@ -170,8 +170,8 @@ return view.extend({
     ].forEach(function (item) {
       o = s.taboption("ports", form.Value, item[0], item[1]);
       o.datatype = "port";
-      o.default = item[2];
-      o.rmempty = false;
+      o.placeholder = item[2];
+      o.rmempty = true;
     });
 
     o = s.taboption("logging", form.Value, "log_path", _("Log File"));
@@ -195,16 +195,6 @@ return view.extend({
     );
     o.datatype = "and(uinteger,min(1024))";
     o.default = "10485760";
-    o.rmempty = false;
-
-    o = s.taboption(
-      "logging",
-      form.Value,
-      "max_files",
-      _("Retained Log Files"),
-    );
-    o.datatype = "range(1,100)";
-    o.default = "4";
     o.rmempty = false;
 
     o = s.taboption(
@@ -237,8 +227,10 @@ return view.extend({
       ),
     );
     o.default = "262144";
-    o.rmempty = false;
+    o.rmempty = true;
     o.validate = function (sectionId, value) {
+      if (value === "") return true;
+
       if (!/^\d+$/.test(value))
         return _("Must be 0 or an integer between 65536 and 16777216.");
 
@@ -246,7 +238,7 @@ return view.extend({
       if (size !== 0 && (size < 65536 || size > 16777216))
         return _("Must be 0 or an integer between 65536 and 16777216.");
 
-      return value;
+      return true;
     };
 
     return m.render();

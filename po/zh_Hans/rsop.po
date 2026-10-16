@@ -189,9 +189,6 @@ msgstr "彩色日志"
 msgid "Maximum Log Size (bytes)"
 msgstr "日志文件最大大小（字节）"
 
-msgid "Retained Log Files"
-msgstr "保留日志文件数"
-
 msgid "Maximum Connections"
 msgstr "最大连接数"
 

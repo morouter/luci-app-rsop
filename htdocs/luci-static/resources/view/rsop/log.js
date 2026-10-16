@@ -39,14 +39,12 @@ return view.extend({
     }
 
     function renderLog(text) {
-      var oldPre = logArea.querySelector("pre");
-      var wasNearBottom =
-        !oldPre ||
-        oldPre.scrollHeight - oldPre.scrollTop - oldPre.clientHeight < 50;
       var log = E("pre", { wrap: "pre" }, [text]);
 
       dom.content(logArea, log);
-      if (wasNearBottom) log.scrollTop = log.scrollHeight;
+      requestAnimationFrame(function () {
+        log.scrollTop = log.scrollHeight;
+      });
     }
 
     function handleTail(res, start) {
