@@ -121,18 +121,21 @@ return view.extend({
       textarea.style.minHeight = "2.5em";
       textarea.style.resize = "none";
       textarea.style.boxSizing = "border-box";
+      textarea.style.display = "block";
+      node.appendChild(
+        E(
+          "button",
+          {
+            type: "button",
+            class: "cbi-button cbi-button-action",
+            style: "display:block;margin-top:6px",
+            click: copyServerKey,
+          },
+          _("Copy"),
+        ),
+      );
       return node;
     };
-
-    o = s.taboption(
-      "general",
-      form.Button,
-      "_copy_server_key",
-      _("Copy Public Key"),
-    );
-    o.inputstyle = "action";
-    o.inputtitle = _("Copy");
-    o.onclick = copyServerKey;
 
     o = s.taboption(
       "general",

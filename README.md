@@ -4,7 +4,7 @@ Rustdesk Server for OpenWrt with LuCI Support.
 
 ## 🚀 Features
 
-- Built-in latest version of [go-rustdesk-server](https://github.com/moaeiou/go-rustdesk-server).
+- Built-in [go-rustdesk-server](https://github.com/moaeiou/go-rustdesk-server).
 - One backend process provides the ID, rendezvous, relay, NAT-test, WebSocket and HTTP compatibility services.
 - Server settings are managed through LuCI/UCI; the runtime TOML file is generated automatically.
 - It can run smoothly with just a few lines of commands.

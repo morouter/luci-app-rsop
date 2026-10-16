@@ -1,6 +1,3 @@
-// Based on luci-app-oplist's log view:
-// https://github.com/morouter/luci-app-oplist
-
 "use strict";
 "require dom";
 "require fs";
@@ -115,7 +112,11 @@ return view.extend({
     function handleClearLog(ev) {
       var btn = ev.target;
       return ui.showModal(_("Clear log"), [
-        E("p", {}, _("This will permanently erase the current log file. Continue?")),
+        E(
+          "p",
+          {},
+          _("This will permanently erase the current log file. Continue?"),
+        ),
         E("div", { class: "right" }, [
           E("button", { class: "btn", click: ui.hideModal }, _("Cancel")),
           " ",

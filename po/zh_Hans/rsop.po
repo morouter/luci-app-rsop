@@ -84,9 +84,6 @@ msgstr "启动服务"
 msgid "Connection Public Key"
 msgstr "连接公钥"
 
-msgid "Copy Public Key"
-msgstr "复制公钥"
-
 msgid "Verify Client Key"
 msgstr "校验客户端密钥"
 
