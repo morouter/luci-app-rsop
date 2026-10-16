@@ -227,6 +227,28 @@ return view.extend({
     o.default = "16777216";
     o.rmempty = false;
 
+    o = s.taboption(
+      "advanced",
+      form.Value,
+      "relay_buffer_size",
+      _("Relay TCP Buffer Size (bytes)"),
+      _(
+        "Per-connection relay buffer. Use 0 for system automatic tuning; larger values use more memory.",
+      ),
+    );
+    o.default = "262144";
+    o.rmempty = false;
+    o.validate = function (sectionId, value) {
+      if (!/^\d+$/.test(value))
+        return _("Must be 0 or an integer between 65536 and 16777216.");
+
+      var size = Number(value);
+      if (size !== 0 && (size < 65536 || size > 16777216))
+        return _("Must be 0 or an integer between 65536 and 16777216.");
+
+      return value;
+    };
+
     return m.render();
   },
 });

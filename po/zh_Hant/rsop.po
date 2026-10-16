@@ -54,6 +54,15 @@ msgstr "匯出日誌失敗：%s"
 msgid "Refresh every %s seconds."
 msgstr "每 %s 秒重新整理一次。"
 
+msgid "Relay TCP Buffer Size (bytes)"
+msgstr "中繼 TCP 緩衝區大小（位元組）"
+
+msgid "Per-connection relay buffer. Use 0 for system automatic tuning; larger values use more memory."
+msgstr "每個中繼連線的緩衝區。設為 0 使用系統自動調校；數值越大占用的記憶體越多。"
+
+msgid "Must be 0 or an integer between 65536 and 16777216."
+msgstr "必須為 0 或 65536 至 16777216 之間的整數。"
+
 msgid "Rustdesk Server for OpenWrt with LuCI Support."
 msgstr "對於Rustdesk Server的OpenWrt LuCI支援。"
 
