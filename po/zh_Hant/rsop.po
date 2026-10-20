@@ -194,3 +194,90 @@ msgstr "最大連線數"
 
 msgid "Maximum Frame Size (bytes)"
 msgstr "最大訊框大小（位元組）"
+
+msgid "Relay Policy"
+msgstr "中繼策略"
+
+msgid "Client Configuration"
+msgstr "用戶端設定"
+
+msgid "Use either a single relay address or a relay server list, not both."
+msgstr "單一中繼位址與中繼伺服器清單不能同時設定。"
+
+msgid "Relay Server List"
+msgstr "中繼伺服器清單"
+
+msgid "Rotate through these relay endpoints. Leave the single relay address empty. IPv6 with a port must use [address]:port."
+msgstr "輪詢使用這些中繼位址，需將單一中繼位址留空。帶連接埠的 IPv6 請使用 [位址]:連接埠。"
+
+msgid "Rendezvous Server List"
+msgstr "會合伺服器清單"
+
+msgid "Server list distributed to legacy clients. Increase the configuration serial after changing this list."
+msgstr "下發給舊版用戶端的伺服器清單，修改後請增加設定序號。"
+
+msgid "Configuration Serial"
+msgstr "設定序號"
+
+msgid "Always Use Relay"
+msgstr "一律使用中繼"
+
+msgid "Force relay instead of direct or LAN connections, including WebSocket clients."
+msgstr "強制使用中繼，停用直連與區域網路連線，也適用於 WebSocket 用戶端。"
+
+msgid "Per-session Bandwidth (Mb/s)"
+msgstr "每個工作階段頻寬（Mb/s）"
+
+msgid "Shared by both directions of one session. 0 means unlimited."
+msgstr "單一工作階段的兩個傳輸方向共用，0 表示不限速。"
+
+msgid "Total Bandwidth (Mb/s)"
+msgstr "總頻寬（Mb/s）"
+
+msgid "Shared by all relay sessions. 0 means unlimited."
+msgstr "所有中繼工作階段共用，0 表示不限速。"
+
+msgid "Reduced Bandwidth (Mb/s)"
+msgstr "降速後頻寬（Mb/s）"
+
+msgid "Applied to the rate-limit list and automatically downgraded sessions. 0 means unlimited."
+msgstr "適用於限速清單及自動降速的工作階段，0 表示不限速。"
+
+msgid "Blocked Addresses"
+msgstr "封鎖位址"
+
+msgid "Refuse relay for these IP addresses or CIDR networks."
+msgstr "拒絕這些 IP 位址或 CIDR 網段使用中繼。"
+
+msgid "Rate-limited Addresses"
+msgstr "限速位址"
+
+msgid "Apply reduced bandwidth to these IP addresses or CIDR networks."
+msgstr "對這些 IP 位址或 CIDR 網段套用降速後頻寬。"
+
+msgid "Downgrade Threshold"
+msgstr "自動降速門檻"
+
+msgid "Downgrade when lifetime average bandwidth exceeds the per-session limit multiplied by this ratio (0 to 1)."
+msgstr "工作階段自建立以來的平均頻寬超過每個工作階段頻寬限制乘以此比例時降速（0 到 1）。"
+
+msgid "Downgrade Check Delay (seconds)"
+msgstr "降速檢查延遲（秒）"
+
+msgid "Start checking after this session duration. 0 disables automatic downgrade; a per-session bandwidth limit is required."
+msgstr "工作階段持續指定時間後開始檢查。0 停用自動降速；需設定每個工作階段頻寬限制。"
+
+msgid "WebSocket Relay / HTTP Compatibility Port"
+msgstr "WebSocket 中繼 / HTTP 相容連接埠"
+
+msgid "Retained Log Files"
+msgstr "保留日誌檔案數"
+
+msgid "Includes the current log file. Set to 1 to keep no rotated history."
+msgstr "包含目前日誌檔案，設為 1 不保留輪替歷史。"
+
+msgid "UDP Receive Buffer (bytes)"
+msgstr "UDP 接收緩衝區（位元組）"
+
+msgid "0 keeps the operating system default."
+msgstr "0 使用作業系統預設值。"

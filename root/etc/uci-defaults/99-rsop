@@ -23,9 +23,15 @@ set_default max_connections '4096' || exit 1
 set_default max_frame_size '16777216' || exit 1
 set_default enforce_key '1' || exit 1
 set_default relay_buffer_size '262144' || exit 1
-
-# This setting is no longer exposed; the server default is always used.
-uci -q delete rsop.main.max_files
+set_default max_files '4' || exit 1
+set_default config_serial '0' || exit 1
+set_default always_use_relay '0' || exit 1
+set_default udp_receive_buffer '0' || exit 1
+set_default single_bandwidth '0' || exit 1
+set_default total_bandwidth '0' || exit 1
+set_default limit_speed '32' || exit 1
+set_default downgrade_threshold '0.66' || exit 1
+set_default downgrade_start_check '1800' || exit 1
 
 uci commit rsop || exit 1
 exit 0

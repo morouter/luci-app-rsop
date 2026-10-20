@@ -194,3 +194,90 @@ msgstr "最大连接数"
 
 msgid "Maximum Frame Size (bytes)"
 msgstr "最大帧大小（字节）"
+
+msgid "Relay Policy"
+msgstr "中继策略"
+
+msgid "Client Configuration"
+msgstr "客户端配置"
+
+msgid "Use either a single relay address or a relay server list, not both."
+msgstr "单个中继地址与中继服务器列表不能同时设置。"
+
+msgid "Relay Server List"
+msgstr "中继服务器列表"
+
+msgid "Rotate through these relay endpoints. Leave the single relay address empty. IPv6 with a port must use [address]:port."
+msgstr "轮询使用这些中继地址，需将单个中继地址留空。带端口的 IPv6 请使用 [地址]:端口。"
+
+msgid "Rendezvous Server List"
+msgstr "会合服务器列表"
+
+msgid "Server list distributed to legacy clients. Increase the configuration serial after changing this list."
+msgstr "下发给旧版客户端的服务器列表，修改后请增大配置序列号。"
+
+msgid "Configuration Serial"
+msgstr "配置序列号"
+
+msgid "Always Use Relay"
+msgstr "始终使用中继"
+
+msgid "Force relay instead of direct or LAN connections, including WebSocket clients."
+msgstr "强制使用中继，禁用直连和局域网连接，也适用于 WebSocket 客户端。"
+
+msgid "Per-session Bandwidth (Mb/s)"
+msgstr "每会话带宽（Mb/s）"
+
+msgid "Shared by both directions of one session. 0 means unlimited."
+msgstr "单个会话的两个传输方向共用，0 表示不限速。"
+
+msgid "Total Bandwidth (Mb/s)"
+msgstr "总带宽（Mb/s）"
+
+msgid "Shared by all relay sessions. 0 means unlimited."
+msgstr "所有中继会话共用，0 表示不限速。"
+
+msgid "Reduced Bandwidth (Mb/s)"
+msgstr "降速后带宽（Mb/s）"
+
+msgid "Applied to the rate-limit list and automatically downgraded sessions. 0 means unlimited."
+msgstr "适用于限速名单及自动降速的会话，0 表示不限速。"
+
+msgid "Blocked Addresses"
+msgstr "封禁地址"
+
+msgid "Refuse relay for these IP addresses or CIDR networks."
+msgstr "拒绝这些 IP 地址或 CIDR 网段使用中继。"
+
+msgid "Rate-limited Addresses"
+msgstr "限速地址"
+
+msgid "Apply reduced bandwidth to these IP addresses or CIDR networks."
+msgstr "对这些 IP 地址或 CIDR 网段应用降速后带宽。"
+
+msgid "Downgrade Threshold"
+msgstr "自动降速阈值"
+
+msgid "Downgrade when lifetime average bandwidth exceeds the per-session limit multiplied by this ratio (0 to 1)."
+msgstr "会话自建立以来的平均带宽超过每会话带宽限制乘以此比例时降速（0 到 1）。"
+
+msgid "Downgrade Check Delay (seconds)"
+msgstr "降速检查延迟（秒）"
+
+msgid "Start checking after this session duration. 0 disables automatic downgrade; a per-session bandwidth limit is required."
+msgstr "会话持续指定时间后开始检查。0 禁用自动降速；需设置每会话带宽限制。"
+
+msgid "WebSocket Relay / HTTP Compatibility Port"
+msgstr "WebSocket 中继 / HTTP 兼容端口"
+
+msgid "Retained Log Files"
+msgstr "保留日志文件数"
+
+msgid "Includes the current log file. Set to 1 to keep no rotated history."
+msgstr "包含当前日志文件，设为 1 不保留轮转历史。"
+
+msgid "UDP Receive Buffer (bytes)"
+msgstr "UDP 接收缓冲区（字节）"
+
+msgid "0 keeps the operating system default."
+msgstr "0 使用操作系统默认值。"

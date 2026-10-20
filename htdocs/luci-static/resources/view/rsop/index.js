@@ -90,6 +90,8 @@ return view.extend({
     s = m.section(form.NamedSection, "main", "rsop");
     s.tab("general", _("General"));
     s.tab("ports", _("Ports"));
+    s.tab("relay", _("Relay Policy"));
+    s.tab("distribution", _("Client Configuration"));
     s.tab("logging", _("Logging"));
     s.tab("advanced", _("Advanced"));
 
@@ -159,6 +161,75 @@ return view.extend({
       _("Public Relay Address"),
     );
     o.placeholder = _("Automatically detect when empty");
+    o.validate = function (sectionId, value) {
+      var servers = this.section.formvalue(sectionId, "relay_servers");
+      return !value || !servers || !servers.length ||
+        _("Use either a single relay address or a relay server list, not both.");
+    };
+
+    o = s.taboption(
+      "general", form.DynamicList, "relay_servers", _("Relay Server List"),
+      _("Rotate through these relay endpoints. Leave the single relay address empty. IPv6 with a port must use [address]:port."),
+    );
+    o.validate = function (sectionId, value) {
+      var single = this.section.formvalue(sectionId, "relay_server");
+      return !value || !value.length || !single ||
+        _("Use either a single relay address or a relay server list, not both.");
+    };
+
+    o = s.taboption(
+      "distribution", form.DynamicList, "rendezvous_servers", _("Rendezvous Server List"),
+      _("Server list distributed to legacy clients. Increase the configuration serial after changing this list."),
+    );
+    o = s.taboption("distribution", form.Value, "config_serial", _("Configuration Serial"));
+    o.datatype = "and(uinteger,range(0,2147483647))";
+    o.default = "0";
+    o.rmempty = false;
+
+    o = s.taboption(
+      "relay", form.Flag, "always_use_relay", _("Always Use Relay"),
+      _("Force relay instead of direct or LAN connections, including WebSocket clients."),
+    );
+    o.default = "0";
+    o.rmempty = false;
+
+    [
+      ["single_bandwidth", _("Per-session Bandwidth (Mb/s)"), "0",
+        _("Shared by both directions of one session. 0 means unlimited.")],
+      ["total_bandwidth", _("Total Bandwidth (Mb/s)"), "0",
+        _("Shared by all relay sessions. 0 means unlimited.")],
+      ["limit_speed", _("Reduced Bandwidth (Mb/s)"), "32",
+        _("Applied to the rate-limit list and automatically downgraded sessions. 0 means unlimited.")],
+    ].forEach(function (item) {
+      o = s.taboption("relay", form.Value, item[0], item[1], item[3]);
+      o.datatype = "and(uinteger,range(0,1000000))";
+      o.default = item[2];
+      o.rmempty = false;
+    });
+
+    [
+      ["blocklist", _("Blocked Addresses"), _("Refuse relay for these IP addresses or CIDR networks.")],
+      ["blacklist", _("Rate-limited Addresses"), _("Apply reduced bandwidth to these IP addresses or CIDR networks.")],
+    ].forEach(function (item) {
+      o = s.taboption("relay", form.DynamicList, item[0], item[1], item[2]);
+      o.datatype = "or(ipaddr,cidr4,cidr6)";
+    });
+
+    o = s.taboption(
+      "relay", form.Value, "downgrade_threshold", _("Downgrade Threshold"),
+      _("Downgrade when lifetime average bandwidth exceeds the per-session limit multiplied by this ratio (0 to 1)."),
+    );
+    o.datatype = "range(0,1)";
+    o.default = "0.66";
+    o.rmempty = false;
+
+    o = s.taboption(
+      "relay", form.Value, "downgrade_start_check", _("Downgrade Check Delay (seconds)"),
+      _("Start checking after this session duration. 0 disables automatic downgrade; a per-session bandwidth limit is required."),
+    );
+    o.datatype = "uinteger";
+    o.default = "1800";
+    o.rmempty = false;
 
     [
       ["http_port", _("HTTP Compatibility Port"), "21114"],
@@ -166,7 +237,7 @@ return view.extend({
       ["id_port", _("ID and Rendezvous Port"), "21116"],
       ["relay_port", _("Relay Port"), "21117"],
       ["websocket_port", _("WebSocket Port"), "21118"],
-      ["web_api_port", _("Web API Port"), "21119"],
+      ["web_api_port", _("WebSocket Relay / HTTP Compatibility Port"), "21119"],
     ].forEach(function (item) {
       o = s.taboption("ports", form.Value, item[0], item[1]);
       o.datatype = "port";
@@ -195,6 +266,22 @@ return view.extend({
     );
     o.datatype = "and(uinteger,min(1024))";
     o.default = "10485760";
+    o.rmempty = false;
+
+    o = s.taboption(
+      "logging", form.Value, "max_files", _("Retained Log Files"),
+      _("Includes the current log file. Set to 1 to keep no rotated history."),
+    );
+    o.datatype = "and(uinteger,range(1,100))";
+    o.default = "4";
+    o.rmempty = false;
+
+    o = s.taboption(
+      "advanced", form.Value, "udp_receive_buffer", _("UDP Receive Buffer (bytes)"),
+      _("0 keeps the operating system default."),
+    );
+    o.datatype = "uinteger";
+    o.default = "0";
     o.rmempty = false;
 
     o = s.taboption(
