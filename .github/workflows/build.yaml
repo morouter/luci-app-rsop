@@ -60,7 +60,8 @@ jobs:
             sed -i 's/x86_64/${{ matrix.pkg_arch }}/g' ./Makefile
           fi
           mkdir -p root/usr/bin
-          rm -f root/usr/bin/DONOTREMOVE
+          rm root/usr/bin/DONOTREMOVE
+          rm root/rustdesk/DONOTREMOVE
           wget -O root/usr/bin/go-rustdesk-server https://github.com/moaeiou/go-rustdesk-server/releases/latest/download/go-rustdesk-server-${{ matrix.server_asset }}
           chmod +x root/usr/bin/go-rustdesk-server
 
