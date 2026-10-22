@@ -80,7 +80,6 @@ jobs:
 
       - name: Release
         id: release
-        continue-on-error: true
         uses: softprops/action-gh-release@master
         with:
           tag_name: V${{ steps.get_version.outputs.version }}
@@ -92,23 +91,6 @@ jobs:
             - Fixes and improvements
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Retry release uploads
-        if: steps.release.outcome == 'failure'
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-          TAG: V${{ steps.get_version.outputs.version }}
-          PACKAGE: luci-app-rsop-${{ steps.get_version.outputs.version }}-${{ matrix.pkg_arch }}.apk
-        run: |
-          for attempt in 1 2 3 4 5; do
-            sleep $((attempt * 2 + RANDOM % 5))
-            if gh release upload "$TAG" luci-i18n-rsop-*.apk "$PACKAGE" --clobber; then
-              exit 0
-            fi
-          done
-          exit 1
 
       - name: Send to mirror
         uses: moaeiou/moaeiou/actions/rsync@main
