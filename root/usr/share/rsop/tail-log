@@ -1,7 +1,30 @@
 #!/bin/sh
 
-LOG='/etc/rustdesk/rdks.log'
-START=${1:-}
+DATA_DIR='/etc/rustdesk'
+ACTION=${1:-tail}
+
+. /lib/functions.sh || exit 1
+config_load rsop
+config_get LOG_PATH main log_path 'rdks.log'
+case "$LOG_PATH" in
+    /*) LOG="$LOG_PATH" ;;
+    *) LOG="$DATA_DIR/$LOG_PATH" ;;
+esac
+
+case "$ACTION" in
+    tail) START=${2:-0} ;;
+    clear)
+        : > "$LOG"
+        exit $?
+        ;;
+    export)
+        exec cat "$LOG"
+        ;;
+    *)
+        echo "Unsupported action: $ACTION" >&2
+        exit 1
+        ;;
+esac
 
 if [ ! -f "$LOG" ]; then
     echo "Log file not found: $LOG" >&2
@@ -9,7 +32,6 @@ if [ ! -f "$LOG" ]; then
 fi
 
 case "$START" in
-    '') exec tail -n 1000 "$LOG" ;;
     *[!0-9]*)
         echo "Invalid line number: $START" >&2
         exit 1
@@ -17,7 +39,9 @@ case "$START" in
 esac
 
 TOTAL=$(awk 'END { print NR }' "$LOG")
-echo "$TOTAL"
+INODE=$(stat -c '%i' "$LOG") || exit 1
+SIZE=$(stat -c '%s' "$LOG") || exit 1
+printf '%s %s %s\n' "$INODE" "$SIZE" "$TOTAL"
 
 if [ "$START" -le 0 ]; then
     tail -n 1000 "$LOG"

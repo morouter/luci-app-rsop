@@ -26,16 +26,20 @@ return view.extend({
     ]);
     var lastLogContent = null;
     var lastTotal = 0;
+    var lastInode = null;
+    var lastSize = 0;
     var refreshing = false;
     var refreshInterval = 5;
 
+    function callLogScript(action, start) {
+      var args = [action];
+      if (start != null) args.push(String(start));
+      return fs.exec_direct("/usr/share/rsop/tail-log", args, "text");
+    }
+
     function fetchTail(start) {
       if (start == null) start = lastTotal > 0 ? lastTotal + 1 : 0;
-      return fs.exec_direct(
-        "/usr/share/rsop/tail-log",
-        [String(start)],
-        "text",
-      );
+      return callLogScript("tail", start);
     }
 
     function renderLog(text) {
@@ -49,12 +53,21 @@ return view.extend({
 
     function handleTail(res, start) {
       var nl = res.indexOf("\n");
-      var total = parseInt(res.substring(0, nl), 10);
+      var metadata = nl >= 0 ? res.substring(0, nl).split(/\s+/) : [];
+      var inode = metadata.length > 0 ? metadata[0] : null;
+      var size = metadata.length > 1 ? parseInt(metadata[1], 10) : 0;
+      var total = metadata.length > 2 ? parseInt(metadata[2], 10) : 0;
       var content = nl >= 0 ? res.substring(nl + 1).replace(/\n$/, "") : "";
 
+      if (isNaN(size)) size = 0;
       if (isNaN(total)) total = 0;
-      if (total < lastTotal) {
+      if (
+        start > 0 &&
+        (inode !== lastInode || size < lastSize || total < lastTotal)
+      ) {
         lastTotal = 0;
+        lastInode = null;
+        lastSize = 0;
         lastLogContent = null;
         return fetchTail(0).then(function (newRes) {
           return handleTail(newRes, 0);
@@ -62,6 +75,8 @@ return view.extend({
       }
 
       var newLines = content === "" ? 0 : content.split("\n").length;
+      lastInode = inode;
+      lastSize = size;
       if (start > 0) {
         if (newLines === 0 && total === lastTotal) return;
         lastTotal += newLines;
@@ -89,6 +104,8 @@ return view.extend({
       if (content === lastLogContent) return;
       lastLogContent = content;
       lastTotal = 0;
+      lastInode = null;
+      lastSize = 0;
       renderLog(content);
     }
 
@@ -124,12 +141,13 @@ return view.extend({
               class: "btn cbi-button-negative",
               click: function () {
                 btn.disabled = true;
-                return fs
-                  .write("/etc/rustdesk/rdks.log", "")
+                return callLogScript("clear")
                   .then(function () {
                     ui.hideModal();
                     lastLogContent = "";
                     lastTotal = 0;
+                    lastInode = null;
+                    lastSize = 0;
                     renderLog(_("Log is empty."));
                   })
                   .catch(function (err) {
@@ -152,10 +170,11 @@ return view.extend({
     }
 
     function handleDownloadLog() {
-      return fs
-        .read_direct("/etc/rustdesk/rdks.log", "blob")
+      return callLogScript("export")
         .then(function (content) {
-          var url = URL.createObjectURL(content);
+          var url = URL.createObjectURL(
+            new Blob([content], { type: "text/plain" }),
+          );
           var link = E("a", {
             href: url,
             download:
