@@ -31,6 +31,14 @@ toml_list() {
     printf ']\n'
 }
 
+toml_relay_servers() {
+    if [ -n "$relay_server" ]; then
+        printf 'relay_servers = ["%s"]\n' "$(toml_escape "$relay_server")"
+    else
+        toml_list relay_servers
+    fi
+}
+
 write_config() {
     local enabled listen relay_server http_port nat_port id_port relay_port
     local websocket_port web_api_port log_path log_level log_color max_size
@@ -81,8 +89,7 @@ write_config() {
     {
         printf '[base]\n'
         printf 'listen = "%s"\n' "$(toml_escape "$listen")"
-        printf 'relay_server = "%s"\n' "$(toml_escape "$relay_server")"
-        toml_list relay_servers
+        toml_relay_servers
         toml_list rendezvous_servers
         printf 'config_serial = %s\n' "$config_serial"
         printf 'http_port = %s\n' "$http_port"

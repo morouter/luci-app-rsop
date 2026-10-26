@@ -24,7 +24,7 @@ And some extra commands:
 # Make sure you are at the root directory of this project.
 rm root/usr/bin/DONOTREMOVE
 rm root/etc/rustdesk/DONOTREMOVE
-wget -O go-rustdesk-server https://github.com/moaeiou/go-rustdesk-server/releases/latest/download/go-rustdesk-server-linux-musl-YourCPUArch
+wget -O root/usr/bin/go-rustdesk-server https://github.com/moaeiou/go-rustdesk-server/releases/latest/download/go-rustdesk-server-linux-musl-YourCPUArch
 chmod +x go-rustdesk-server
 cd ../../..
 # For the next step: See generic guide
@@ -36,4 +36,4 @@ This project has been licensed under the [GNU Affero General Public License Vers
 
 This project includes [go-rustdesk-server](https://github.com/moaeiou/go-rustdesk-server).
 
-And [the log page](https://github.com/Internet1235/luci-app-openlist/blob/main/luci-app-openlist/htdocs/luci-static/resources/view/openlist/log.js) licensed under the MIT, So in this project I change it to `AGPL-v3`.
+And [the log page](https://github.com/Internet1235/luci-app-openlist/blob/main/luci-app-openlist/htdocs/luci-static/resources/view/openlist/log.js) licensed under the MIT, So in this project I changed it to `AGPL-v3`.
