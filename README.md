@@ -2,6 +2,10 @@
 
 Rustdesk Server for OpenWrt with LuCI Support.
 
+## 🎉 This item has been archived!
+
+This is because the original design of rustdesk is full of problems, but now with OpenUUYC, I think there is no need to continue to maintain it.
+
 ## 🚀 Features
 
 - Built-in [go-rustdesk-server](https://github.com/moaeiou/go-rustdesk-server).
